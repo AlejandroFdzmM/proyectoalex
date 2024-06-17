@@ -1,0 +1,15 @@
+dn: uid=admin,ou=users,dc=proyectoalex,dc=com
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: admin
+sn: admin
+givenName: admin
+cn: admin User
+displayName: Admin User
+uidNumber: 1000
+gidNumber: 1000
+userPassword: admin
+gecos: Admin User
+loginShell: /bin/bash
+homeDirectory: /home/admin
