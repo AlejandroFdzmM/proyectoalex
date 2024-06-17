@@ -12,6 +12,7 @@ resource "aws_eks_cluster" "proyecto" {
       aws_subnet.terraform2copia.id,
       aws_subnet.terraformcopia.id
     ]
+    security_group_ids = [aws_security_group.alb_sg.id]
     endpoint_public_access = true
     endpoint_private_access = true
   }
