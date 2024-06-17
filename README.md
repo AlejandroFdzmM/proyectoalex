@@ -66,6 +66,8 @@ En Prometheus server URL * introducir el nombre del servico promethesu seguido d
 
 - http://prometheus-service:9090
 
+En esta config esta con un servicio LoadBalancer, modificar al gusto
+
 Algunos dasboard que me funcionan son los 14057 1860
 
 
