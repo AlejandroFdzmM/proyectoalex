@@ -31,17 +31,6 @@ resource "aws_subnet" "terraform2" {
   }
 }
 
-/**
-resource "aws_subnet" "terraform3" {
-  vpc_id     = aws_vpc.terraform.id
-  cidr_block = "10.0.6.0/23"
-  availability_zone = "us-east-1a"
-  tags = {
-    Name = "Terraform-Privada2"
-  }
-}
-**/
-
 /** Subred publica de la primera zona **/
 resource "aws_subnet" "terraformcopia" {
   vpc_id     = aws_vpc.terraform.id
@@ -63,16 +52,7 @@ resource "aws_subnet" "terraform2copia" {
   }
 }
 
-/**
-resource "aws_subnet" "terraform3copia" {
-  vpc_id     = aws_vpc.terraform.id
-  cidr_block = "10.0.8.0/23"
-  availability_zone = "us-east-1b"
-  tags = {
-    Name = "Terraform-Privadacopia2"
-  }
-}
-**/
+
 
 /** IP elastica **/
 resource "aws_eip" "lb" {
@@ -142,15 +122,6 @@ resource "aws_route_table_association" "b" {
   subnet_id      = aws_subnet.terraform2.id
   route_table_id = aws_route_table.terraform2.id
 }
-
-
-/**
-resource "aws_route_table_association" "c" {
-  subnet_id      = aws_subnet.terraform3.id
-  route_table_id = aws_route_table.terraform2.id
-}
-
-**/
 
 /**  Ip elastica para la segunda zona **/
 resource "aws_eip" "lbcopia" {
@@ -224,13 +195,6 @@ resource "aws_route_table_association" "copiab" {
   route_table_id = aws_route_table.terraformcopiaprivada.id
 }
 
-/**
-resource "aws_route_table_association" "copiac" {
-  subnet_id      = aws_subnet.terraform3copia.id
-  route_table_id = aws_route_table.terraformcopiaprivada.id
-}
-
-**/
 
 
 /** Puerta de enlace de la VPC **/
