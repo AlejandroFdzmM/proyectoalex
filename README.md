@@ -71,6 +71,12 @@ En esta config esta con un servicio LoadBalancer, modificar al gusto
 Algunos dasboard que me funcionan son los 14057 1860
 
 
+### Adicional
+
+En mi caso he connectado el balanceador de carga de nginx a las ip de Cloudflare con politicas para redirifir de http a https
+En caso de que no se quiera conectar a Cloudflare modificar el servicio de nginx o comentar las lineas de las ips
+
+
 
 
 
