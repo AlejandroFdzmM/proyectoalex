@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-phpfpm-deployment
+  labels:
+    app: nginx-phpfpm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-phpfpm
+  template:
+    metadata:
+      labels:
+        app: nginx-phpfpm
+    spec:
+      initContainers:
+      - name: init-chown
+        image: busybox:1.34.0  # Using a small image with basic utilities
+        command: ["sh", "-c", "chown -R www-data:www-data /var/www/html"]
+        volumeMounts:
+        - name: shared-files
+          mountPath: /var/www/html
+      containers:
+      - name: nginx-container
+        image: nginx:latest
+        ports:
+        - containerPort: 8092
+          name: http
+        volumeMounts:
+        - name: shared-files
+          mountPath: /var/www/html
+        - name: nginx-config-volume
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+      - name: php-fpm-container
+        image: septimo1909/mi-php-proyecto
+        volumeMounts:
+        - name: shared-files
+          mountPath: /var/www/html
+      - name: nginx-exporter
+        image: nginx/nginx-prometheus-exporter:latest
+        ports:
+        - containerPort: 9113
+          name: nginx-metrics
+        args:
+        - -nginx.scrape-uri=http://127.0.0.1:8092/stub_status
+      - name: php-fpm-exporter
+        image: hipages/php-fpm_exporter:latest
+        ports:
+        - containerPort: 9253
+          name: php-fpm-metrics
+        args:
+        - --phpfpm.scrape-uri=http://127.0.0.1:9000/status
+      - name: node-exporter
+        image: prom/node-exporter:latest
+        ports:
+        - containerPort: 9100
+          name: node-metrics
+      volumes:
+      - name: shared-files
+        persistentVolumeClaim:
+          claimName: shared-files-pvc
+      - name: nginx-config-volume
+        configMap:
+          name: nginx-config
+      restartPolicy: Always

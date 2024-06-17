@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-deployment
+  labels:
+    app: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v2.28.1
+        args:
+          - "--config.file=/etc/prometheus/prometheus.yml"
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: prometheus-config-volume
+          mountPath: /etc/prometheus
+        - name: prometheus-storage-volume
+          mountPath: /prometheus
+        - name: alertmanager-config-volume
+          mountPath: /alertmanager-config
+        - name: alerting-rules-volume  # Add this volume mount
+          mountPath: /etc/prometheus/rules  # Mount path for alerting rules file directory
+      volumes:
+      - name: prometheus-config-volume
+        configMap:
+          name: prometheus-config
+      - name: prometheus-storage-volume
+        emptyDir: {}
+      - name: alertmanager-config-volume
+        configMap:
+          name: alertmanager-config
+      - name: alerting-rules-volume  # Define the alerting rules config map volume
+        configMap:
+          name: prometheus-alerting-rules  # Name of the alerting rules config map
